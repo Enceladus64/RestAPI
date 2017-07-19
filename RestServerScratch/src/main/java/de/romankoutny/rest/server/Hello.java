@@ -5,7 +5,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-
 // http://localhost:8888/jersey/hello
 // curl -X GET "http://localhost:8888/jersey/hello" -H Accept:text/html
 
