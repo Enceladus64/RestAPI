@@ -36,13 +36,18 @@ public class Starter
         String fn = url.getFile();
         System.out.println("webxml file    " + fn);
         
-        
+        String osname = System.getProperty("os.name").toLowerCase();
+        boolean isLinux = osname.contains("linux");
+        System.out.println("OS.Name " + osname);
         
         Server server = new Server(8888);
 
-        String rootPath = "/opt/Roman-Eclipse-WorkspaceLUNA/RestServerScratch/bin/WEB-INF/web.xml";
+        String base = isLinux ? "/opt/Roman-Eclipse-WorkspaceLUNA/RestServerScratch/bin" :
+                                "/Users/romankoutny/git/RestAPI/RestServerScratch/bin";
+        
+        String rootPath = base + "/WEB-INF/web.xml";
         WebAppContext webapp = new WebAppContext(); //rootPath, "");
-        webapp.setResourceBase("/opt/Roman-Eclipse-WorkspaceLUNA/RestServerScratch/bin");
+        webapp.setResourceBase(base);
         webapp.setDescriptor(rootPath);
         server.setHandler(webapp);
 
