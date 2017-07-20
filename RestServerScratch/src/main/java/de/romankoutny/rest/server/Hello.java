@@ -12,7 +12,8 @@ import javax.ws.rs.core.MediaType;
 
 //Sets the path to base URL + /hello
 @Path("/hello")
-public class Hello {
+public class Hello 
+{
 
   // This method is called if TEXT_PLAIN is request
   @GET
