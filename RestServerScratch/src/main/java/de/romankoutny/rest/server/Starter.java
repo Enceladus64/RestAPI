@@ -4,6 +4,8 @@ import java.net.URL;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Starter
 {
@@ -32,27 +34,30 @@ public class Starter
     
     public static void main(String[] args) throws Exception 
     {
-        URL url = Starter.class.getResource("/WEB-INF/web.xml");
-        String fn = url.getFile();
-        System.out.println("webxml file    " + fn);
+        String webxml = "/WEB-INF/web.xml";
         
-        String osname = System.getProperty("os.name").toLowerCase();
-        boolean isLinux = osname.contains("linux");
-        System.out.println("OS.Name " + osname);
+        URL url = Starter.class.getResource(webxml);
+        String rootPath = url.getFile();
+        
+        Logger logger = LoggerFactory.getLogger(Starter.class);
+        logger.info("webxml file:  {}", rootPath);
+        
+//        String osname = System.getProperty("os.name").toLowerCase();
+//        boolean isLinux = osname.contains("linux");
+//        System.out.println("OS.Name " + osname);
         
         Server server = new Server(8888);
 
-        String base = isLinux ? "/opt/Roman-Eclipse-WorkspaceLUNA/RestServerScratch/bin" :
-                                "/Users/romankoutny/git/RestAPI/RestServerScratch/bin";
+        String base = rootPath.substring(0, rootPath.length()-webxml.length());
         
-        String rootPath = base + "/WEB-INF/web.xml";
-        WebAppContext webapp = new WebAppContext(); //rootPath, "");
+        WebAppContext webapp = new WebAppContext();
         webapp.setResourceBase(base);
         webapp.setDescriptor(rootPath);
+        // webapp.setContextPath("/CTX");  //damit:   http://localhost:8888/CTX/jersey/hello/html/Roman
         server.setHandler(webapp);
 
         server.start();
         server.join();
-        
     }
+    
 }
