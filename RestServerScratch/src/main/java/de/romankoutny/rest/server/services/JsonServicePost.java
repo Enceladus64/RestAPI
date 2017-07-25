@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.romankoutny.rest.server.NameContainer;
 
-// " um json identifier herum sind wichtig"""""""
+// " um json identifier herum sind wichtig!!!!!!!!
 // curl -X POST "http://localhost:8888/jersey/sub/name/Bello" -H Accept:application/json -H "Content-Type:application/json" --data '{"bodyid":"Lupo"}'
 
 @Path("/sub")
