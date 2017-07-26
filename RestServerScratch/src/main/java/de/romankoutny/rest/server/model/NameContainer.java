@@ -1,4 +1,4 @@
-package de.romankoutny.rest.server;
+package de.romankoutny.rest.server.model;
 
 public class NameContainer {
 	public String name;

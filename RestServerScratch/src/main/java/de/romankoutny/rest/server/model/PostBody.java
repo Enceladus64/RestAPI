@@ -1,4 +1,4 @@
-package de.romankoutny.rest.server.services;
+package de.romankoutny.rest.server.model;
 
 public class PostBody
 {

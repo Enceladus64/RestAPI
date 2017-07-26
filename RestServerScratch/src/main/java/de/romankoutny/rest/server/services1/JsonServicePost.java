@@ -1,4 +1,4 @@
-package de.romankoutny.rest.server.services;
+package de.romankoutny.rest.server.services1;
 
 
 import javax.ws.rs.Consumes;
@@ -8,7 +8,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import de.romankoutny.rest.server.NameContainer;
+import de.romankoutny.rest.server.model.NameContainer;
+import de.romankoutny.rest.server.model.PostBody;
 
 // " um json identifier herum sind wichtig!!!!!!!!
 // curl -X POST "http://localhost:8888/jersey/sub/name/Bello" -H Accept:application/json -H "Content-Type:application/json" --data '{"bodyid":"Lupo"}'
