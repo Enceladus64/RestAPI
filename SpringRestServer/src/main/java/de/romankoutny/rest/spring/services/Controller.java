@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.romankoutny.rest.spring.Starter;
 import de.romankoutny.rest.spring.model.NameContainer;
 import de.romankoutny.rest.spring.model.PostBody;
 
@@ -21,7 +20,8 @@ import de.romankoutny.rest.spring.model.PostBody;
 @RequestMapping("sub")
 public class Controller
 {
-    @RequestMapping(value = "/name/{name}", method = RequestMethod.POST,headers="Accept=application/json")
+    // @RequestMapping(value = "/name/{name}", method = RequestMethod.POST,headers="Accept=application/json")
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.POST,consumes="application/json",produces="application/json")
     public NameContainer execService(@PathVariable String name, @RequestBody final PostBody body)
     {
         NameContainer nc = new NameContainer();

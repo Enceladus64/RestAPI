@@ -1,2 +1,4 @@
 http://www.java2blog.com/2015/09/spring-restful-web-services-json-example.html
 
+https://stackoverflow.com/questions/4962023/spring-mvc-requestmapping-headers-can-only-accept-one-value
+
