@@ -1,0 +1,26 @@
+{
+  "intents": [
+    {
+      "intent": "chooseDice",
+      "slots": [
+        {
+          "name": "sides",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "sidesseitigen",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "rollDice"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    }
+  ]
+}

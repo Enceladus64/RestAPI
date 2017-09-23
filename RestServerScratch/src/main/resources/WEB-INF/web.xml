@@ -15,7 +15,9 @@
 		<!-- Register resources and providers under com.vogella.jersey.first package. -->
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>de.romankoutny.rest.server.services1;de.romankoutny.rest.server.services2</param-value>
+			<param-value>
+			 de.romankoutny.rest.server.services1;de.romankoutny.rest.server.services2;de.romankoutny.rest.server.services.alexa
+			</param-value>
 		</init-param>
 		<init-param>
 		    <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>

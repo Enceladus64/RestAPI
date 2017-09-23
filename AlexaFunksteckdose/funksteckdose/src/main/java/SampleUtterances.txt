@@ -1,0 +1,17 @@
+steckdoseAn schalte die Funksteckdose ein
+steckdoseAn schalte die Funksteckdose an
+steckdoseAn schalte die Steckdose ein
+steckdoseAn schalte die Steckdose an
+steckdoseAn mach die Steckdose an
+steckdoseAn mache die Steckdose an
+steckdoseAn schalte das Licht ein
+steckdoseAn mach das Licht an
+steckdoseAn mache das Licht an
+
+steckdoseAus schalte die Funksteckdose aus
+steckdoseAus schalte die Steckdose aus
+steckdoseAus mach die Steckdose aus
+steckdoseAus mache die Steckdose aus
+steckdoseAus schalte das Licht aus
+steckdoseAus mach das Licht aus
+steckdoseAus mache das Licht aus

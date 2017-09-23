@@ -1,0 +1,16 @@
+{
+  "intents": [
+    {
+      "intent": "steckdoseAn"
+    },
+    {
+      "intent": "steckdoseAus"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    }
+  ]
+}
