@@ -6,6 +6,10 @@
  * user guide available at https://docs.gradle.org/3.5/userguide/java_library_plugin.html
  */
 
+//plugins {
+//id "com.github.johnrengelman.shadow" version "1.2.3"
+//}
+
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
 apply plugin: 'jetty'
@@ -38,7 +42,12 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.6.v20170531'
 
     compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.25.1'
-    compile group: 'com.sun.jersey', name: 'jersey-json', version: '1.19.4'
+    compile("com.sun.jersey:jersey-json:1.19.4") {
+        exclude group: 'javax.xml.bind', module: 'jaxb-api'
+        exclude group: 'javax.ws.rs', module: 'jsr311-api'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'javax.mail', module: 'mail'
+    }
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.25.1'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-moxy', version: '2.25.1'
 

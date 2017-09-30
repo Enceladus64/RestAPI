@@ -1,7 +1,14 @@
 package de.romankoutny.rest.server.services.alexa;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,35 +25,77 @@ import de.romankoutny.rest.server.services.alexa.model.response.SpeechletRespons
 @Path("/alexa")
 public class AlexaFunksteckdoseService
 {
+    private static final String HOST = "192.168.2.167";
+    private static final int PORT = 81;
+    private static final String TEMPLATE = "http://%s:%d/%s";
 
+    private static final String NICHT_VERSTANDEN = "ich habe dich leider nicht verstanden";
+    private static final String PLAIN_TEXT = "PlainText";
+    
+    private static enum Command {AN, AUS};
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/funksteckdose")
     public AlexaResponse execService(final AlexaRequest body)
     {
-        Logger logger = LoggerFactory.getLogger(getClass());
         logger.info("ALEXA Body: " + body);
+        
+        String intentName = body.getRequest().getIntent().getName();
+        String answerText;
+        
+        try
+        {
+            switch(intentName)
+            {
+                case "steckdoseAn":
+                    answerText = "ich schalte die Funksteckdose ein.";
+                    sendFunksteckdosenCommand(Command.AN);
+                    break;
+                case "steckdoseAus":
+                    answerText = "ich schalte die Funksteckdose aus.";
+                    sendFunksteckdosenCommand(Command.AUS);
+                    break;
+                case "AMAZON.StopIntent":
+                    answerText = "Servus.";
+                    break;
+                case "AMAZON.HelpIntent":
+                    answerText = "Schalte die Funksteckdose ein oder aus";
+                    break;
+                default:
+                    answerText = "Ich kann die Funksteckdose nun für dich steuern.";
+            }
+        }
+        catch(Exception ex)
+        {
+            answerText = "etwas ist gerade fürchterlich schief gelaufen.";
+        }
         
         AlexaResponse aResp = new AlexaResponse();
         Response resp = new Response();
         OutputSpeech outputSpeech = new OutputSpeech();
-        outputSpeech.setText("ich schalte die Funksteckdose AUS.");
-        outputSpeech.setType("PlainText");
+        outputSpeech.setText(answerText);
+        outputSpeech.setType(PLAIN_TEXT);
         
         resp.setOutputSpeech(outputSpeech);
         
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(new OutputSpeech());
-        reprompt.getOutputSpeech().setText("ich habe dich leider nicht verstanden");
-        reprompt.getOutputSpeech().setType("PlainText");
+        reprompt.getOutputSpeech().setText(NICHT_VERSTANDEN);
+        reprompt.getOutputSpeech().setType(PLAIN_TEXT);
         
         resp.setReprompt(reprompt);
         
         SpeechletResponse speechletResponse = new SpeechletResponse();
         speechletResponse.setOutputSpeech(new OutputSpeech());
-        speechletResponse.getOutputSpeech().setText("ich schalte die Funksteckdose AUS.");
+        speechletResponse.getOutputSpeech().setText(answerText);
         speechletResponse.setReprompt(new Reprompt());
         speechletResponse.getReprompt().setOutputSpeech(new OutputSpeech());
-        speechletResponse.getReprompt().getOutputSpeech().setText("ich habe dich leider nicht verstanden");
+        speechletResponse.getReprompt().getOutputSpeech().setText(NICHT_VERSTANDEN);
         speechletResponse.setShouldEndSession(false);
         
         resp.setSpeechletResponse(speechletResponse);
@@ -58,6 +107,53 @@ public class AlexaFunksteckdoseService
         return aResp;
     }
     
+    
+    private void sendFunksteckdosenCommand(final Command cmd)
+    {
+        Thread t = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                sendFunksteckdosenCommandSub(cmd);
+            }
+        });
+        
+        t.setDaemon(true);
+        t.start();
+    }
+    
+    private void sendFunksteckdosenCommandSub(final Command cmd)
+    {
+        String url = String.format(TEMPLATE, HOST, PORT, cmd.toString());
+
+        logger.info("Funksteckdose Kommando {}  url: {}", cmd, url);
+
+        try
+        {
+            URLConnection conn = new URL(url).openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(false);
+    
+            conn.connect();
+            logger.info("Funksteckdose Connect OK");
+            
+            InputStream is = conn.getInputStream();
+            while(is.available() > 0)
+            {
+                is.read();
+            }
+            
+            logger.info("Funksteckdose vor Close");
+            is.close();
+        }
+        catch(Exception ioex)
+        {
+            logger.error("Fehler bei ESP8266 Kommunikation", ioex);
+        }
+                
+    }
+
 }
 
 
