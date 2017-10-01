@@ -7,6 +7,25 @@ public class Response
 
     private OutputSpeech outputSpeech;
 
+    private boolean shouldEndSession;
+
+    
+    /**
+     * @return the shouldEndSession
+     */
+    public boolean isShouldEndSession()
+    {
+        return shouldEndSession;
+    }
+
+    /**
+     * @param shouldEndSession the shouldEndSession to set
+     */
+    public void setShouldEndSession(boolean shouldEndSession)
+    {
+        this.shouldEndSession = shouldEndSession;
+    }
+
     public Reprompt getReprompt ()
     {
         return reprompt;

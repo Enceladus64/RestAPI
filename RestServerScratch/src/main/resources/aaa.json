@@ -1,0 +1,30 @@
+{
+	"response": {
+		"reprompt": {
+			"outputSpeech": {
+				"text": "ich habe dich leider nicht verstanden",
+				"type": "PlainText"
+			}
+		},
+		"speechletResponse": {
+			"reprompt": {
+				"outputSpeech": {
+					"text": "ich habe dich leider nicht verstanden",
+					"type": null
+				}
+			},
+			"outputSpeech": {
+				"text": "Ich kann die Funksteckdose nun für dich steuern.",
+				"type": null
+			},
+			"shouldEndSession": false
+		},
+		"outputSpeech": {
+			"text": "Ich kann die Funksteckdose nun für dich steuern.",
+			"type": "PlainText"
+		}
+	},
+	"sessionAttributes": "",
+	"version": "1.0"
+}
+

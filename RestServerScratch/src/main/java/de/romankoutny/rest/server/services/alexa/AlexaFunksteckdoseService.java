@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,13 +85,13 @@ public class AlexaFunksteckdoseService
             answerText = "etwas ist gerade fürchterlich schief gelaufen.";
         }
         
-        AlexaResponse aResp = new AlexaResponse();
-        Response resp = new Response();
         OutputSpeech outputSpeech = new OutputSpeech();
         outputSpeech.setText(answerText);
         outputSpeech.setType(PLAIN_TEXT);
         
+        Response resp = new Response();
         resp.setOutputSpeech(outputSpeech);
+        resp.setShouldEndSession(endSession);
         
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(new OutputSpeech());
@@ -110,11 +111,23 @@ public class AlexaFunksteckdoseService
         
         resp.setSpeechletResponse(speechletResponse);
         
+        AlexaResponse aResp = new AlexaResponse();
         aResp.setVersion("1.0");
-        aResp.setSessionAttributes(null);
-        
+        aResp.setSessionAttributes(new String());
         aResp.setResponse(resp);
         
+        ObjectMapper mapper = new ObjectMapper();
+        String sss = null;
+        try
+        {
+            sss = mapper.writeValueAsString(aResp);
+        }
+        catch (IOException e)
+        {
+            logger.error("conv to str", e);
+        }
+        logger.info("ALEXA Response: " + sss);
+
         return aResp;
     }
     
