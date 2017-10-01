@@ -1,6 +1,8 @@
 package de.romankoutny.rest.server.services.alexa;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -20,7 +22,7 @@ import de.romankoutny.rest.server.services.alexa.model.response.Reprompt;
 import de.romankoutny.rest.server.services.alexa.model.response.Response;
 import de.romankoutny.rest.server.services.alexa.model.response.SpeechletResponse;
 
-//curl -X POST "http://localhost:8888/jersey/alexa/funksteckdose"
+//curl -X POST "http://localhost:8888/jersey/alexa/funksteckdose" 
 
 @Path("/alexa")
 public class AlexaFunksteckdoseService
@@ -45,7 +47,12 @@ public class AlexaFunksteckdoseService
     {
         logger.info("ALEXA Body: " + body);
         
-        String intentName = body.getRequest().getIntent().getName();
+        boolean endSession = false;
+        String intentName = "AMAZON.StartIntent";
+        if(body != null && body.getRequest() != null && body.getRequest().getIntent() != null)
+        {
+            intentName = body.getRequest().getIntent().getName();
+        }
         String answerText;
         
         try
@@ -62,12 +69,14 @@ public class AlexaFunksteckdoseService
                     break;
                 case "AMAZON.StopIntent":
                     answerText = "Servus.";
+                    endSession = true;
                     break;
                 case "AMAZON.HelpIntent":
                     answerText = "Schalte die Funksteckdose ein oder aus";
                     break;
                 default:
                     answerText = "Ich kann die Funksteckdose nun für dich steuern.";
+                    break;
             }
         }
         catch(Exception ex)
@@ -96,26 +105,36 @@ public class AlexaFunksteckdoseService
         speechletResponse.setReprompt(new Reprompt());
         speechletResponse.getReprompt().setOutputSpeech(new OutputSpeech());
         speechletResponse.getReprompt().getOutputSpeech().setText(NICHT_VERSTANDEN);
-        speechletResponse.setShouldEndSession(false);
+        
+        speechletResponse.setShouldEndSession(endSession);
         
         resp.setSpeechletResponse(speechletResponse);
         
         aResp.setVersion("1.0");
         aResp.setSessionAttributes(null);
+        
         aResp.setResponse(resp);
         
         return aResp;
     }
     
     
-    private void sendFunksteckdosenCommand(final Command cmd)
+    private void sendFunksteckdosenCommand(final Command cmd) throws MalformedURLException, IOException
     {
+        String url = String.format(TEMPLATE, HOST, PORT, cmd.toString());
+        logger.info("Funksteckdose Kommando {}  url: {}", cmd, url);
+        final URLConnection conn = new URL(url).openConnection();
+        
+        conn.setDoInput(true);
+        conn.setDoOutput(false);
+        conn.connect();
+
         Thread t = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                sendFunksteckdosenCommandSub(cmd);
+                sendFunksteckdosenCommandSub(conn, cmd);
             }
         });
         
@@ -123,19 +142,10 @@ public class AlexaFunksteckdoseService
         t.start();
     }
     
-    private void sendFunksteckdosenCommandSub(final Command cmd)
+    private void sendFunksteckdosenCommandSub(final URLConnection conn, final Command cmd)
     {
-        String url = String.format(TEMPLATE, HOST, PORT, cmd.toString());
-
-        logger.info("Funksteckdose Kommando {}  url: {}", cmd, url);
-
         try
         {
-            URLConnection conn = new URL(url).openConnection();
-            conn.setDoInput(true);
-            conn.setDoOutput(false);
-    
-            conn.connect();
             logger.info("Funksteckdose Connect OK");
             
             InputStream is = conn.getInputStream();
